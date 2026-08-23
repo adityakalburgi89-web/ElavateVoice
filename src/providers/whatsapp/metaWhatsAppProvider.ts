@@ -27,10 +27,14 @@ export class MetaWhatsAppProvider implements IWhatsAppProvider {
       ? `including ${leadDetails.requiredFeatures.join(', ')}`
       : 'with full online payment & delivery support';
 
+    const portfolioUrl = env.PORTFOLIO_URL || 'https://portfolio-aditya-nine-9.vercel.app/';
+
     const messageText = customNote || 
       `*ElevateBox E-Commerce Development*\n\n` +
       `Namaste! We're glad to connect on the call right now.\n` +
       `We've noted your requirements for *${business}* ${features}.\n\n` +
+      `Explore our past work and live client stores here:\n` +
+      `🔗 ${portfolioUrl}\n\n` +
       `Our technical team is reviewing your project requirements right now to provide the fastest launch plan.\n` +
       `Let's continue on the phone! 🚀`;
 
@@ -42,7 +46,9 @@ export class MetaWhatsAppProvider implements IWhatsAppProvider {
 
     if (isDummyOrMissing) {
       console.log(`[MetaWhatsAppProvider] [SANDBOX MOCK] WhatsApp to ${to}:`);
-      console.log(`--------------------------------------------------\n${messageText}\n--------------------------------------------------`);
+      console.log(`--------------------------------------------------`);
+      console.log(messageText);
+      console.log(`--------------------------------------------------`);
       return {
         success: true,
         messageId: `wamid.mock_midcall_${Date.now()}`,
@@ -59,20 +65,20 @@ export class MetaWhatsAppProvider implements IWhatsAppProvider {
   async sendPostCallFollowUp(params: SendPostCallFollowUpParams): Promise<WhatsAppResult> {
     const { recipientPhoneNumber, conversationSummary, developerPhoneNumber, resumeUrl, architectureImageUrl } = params;
     const to = recipientPhoneNumber.replace(/\+/g, '').trim();
+    const portfolioUrl = resumeUrl || env.PORTFOLIO_URL || 'https://portfolio-aditya-nine-9.vercel.app/';
 
     let messageText = 
       `*ElevateBox — Call Summary & Next Steps* 🚀\n\n` +
       `Thank you for speaking with us today.\n\n` +
       `*Summary of Discussion:*\n${conversationSummary}\n\n` +
       `----------------------------------------\n` +
-      `📱 *Direct Developer Contact:* ${developerPhoneNumber}\n`;
+      `📱 *Direct Developer Contact:* ${developerPhoneNumber}\n` +
+      `🌐 *Developer Portfolio & Projects:* ${portfolioUrl}\n`;
 
-    if (architectureImageUrl) {
+    if (architectureImageUrl && architectureImageUrl !== portfolioUrl) {
       messageText += `🏗️ *System Architecture:* ${architectureImageUrl}\n`;
     }
-    if (resumeUrl) {
-      messageText += `📄 *Developer Resume:* ${resumeUrl}\n`;
-    }
+    
     messageText += `----------------------------------------\n\n` +
       `Our team will follow up shortly to help bring your online store to life!`;
 

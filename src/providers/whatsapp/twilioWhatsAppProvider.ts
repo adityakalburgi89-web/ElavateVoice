@@ -23,10 +23,14 @@ export class TwilioWhatsAppProvider implements IWhatsAppProvider {
       ? ` including ${leadDetails.requiredFeatures.join(', ')}`
       : ' with full online payment & delivery support';
 
+    const portfolioUrl = env.PORTFOLIO_URL || 'https://portfolio-aditya-nine-9.vercel.app/';
+
     const messageText =
       `*ElevateBox E-Commerce Development* 🚀\n\n` +
       `Namaste! We're glad to connect on the call right now.\n` +
       `We've noted your requirements for *${businessName}*${features}.\n\n` +
+      `Explore our past work and live client stores here:\n` +
+      `🔗 ${portfolioUrl}\n\n` +
       `Our technical team is reviewing your project requirements right now to provide the fastest launch plan.\n` +
       `Let's continue on the phone! 🚀`;
 
@@ -37,22 +41,17 @@ export class TwilioWhatsAppProvider implements IWhatsAppProvider {
    * Dispatches post-call comprehensive follow-up message with developer number, resume, and architecture.
    */
   async sendPostCallFollowUp(params: SendPostCallFollowUpParams): Promise<WhatsAppResult> {
-    const { recipientPhoneNumber, conversationSummary, developerPhoneNumber, resumeUrl, architectureImageUrl } = params;
+    const { recipientPhoneNumber, conversationSummary, developerPhoneNumber, resumeUrl } = params;
+    const portfolioUrl = resumeUrl || env.PORTFOLIO_URL || 'https://portfolio-aditya-nine-9.vercel.app/';
 
     let messageText =
       `*ElevateBox — Call Summary & Next Steps* 🚀\n\n` +
       `Thank you for speaking with us today.\n\n` +
       `*Summary of Discussion:*\n${conversationSummary}\n\n` +
       `----------------------------------------\n` +
-      `📱 *Direct Developer Contact:* ${developerPhoneNumber}\n`;
-
-    if (architectureImageUrl) {
-      messageText += `🏗️ *System Architecture:* ${architectureImageUrl}\n`;
-    }
-    if (resumeUrl) {
-      messageText += `📄 *Developer Resume:* ${resumeUrl}\n`;
-    }
-    messageText += `----------------------------------------\n\n` +
+      `📱 *Direct Developer Contact:* ${developerPhoneNumber}\n` +
+      `🌐 *Developer Portfolio & Projects:* ${portfolioUrl}\n` +
+      `----------------------------------------\n\n` +
       `Our team will follow up shortly to help bring your online store to life!`;
 
     return this.sendMessage(recipientPhoneNumber, messageText);
