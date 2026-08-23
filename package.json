@@ -13,8 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/pg": "^8.23.1",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
+    "pg": "^8.23.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
