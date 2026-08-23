@@ -139,8 +139,8 @@ Q: Do you integrate UPI and Razorpay?
 A: Yes! We set up seamless 1-click UPI payments (Google Pay, PhonePe, Paytm), Cards, Netbanking, and Cash on Delivery with zero drop-off.
 
 Q: Can customers order via WhatsApp?
-A: Yes, we build direct WhatsApp Cart sharing and automated order tracking notifications.
+A: Yes, we build direct WhatsApp checkout and automated order tracking notifications.
 
-Q: How can I speak directly with your technical lead?
-A: Our engineering team's direct phone number is +91 7406209248. We will also send our full contact card, architecture diagram, and portfolio to your WhatsApp right after this call!
+Q: How can I explore your portfolio or speak directly with your technical lead?
+A: You can explore our live projects and portfolio at https://portfolio-aditya-nine-9.vercel.app/ and our engineering lead's direct phone number is +91 7406209248. We will also send our full portfolio link to your WhatsApp!
 ```
