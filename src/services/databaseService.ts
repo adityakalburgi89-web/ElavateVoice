@@ -78,13 +78,13 @@ export class DatabaseService {
           );
         `);
         this.isConnected = true;
-        console.log('[DatabaseService] ✅ Connected to Supabase PostgreSQL and initialized schema successfully.');
+        console.log('[DatabaseService] Connected to Supabase PostgreSQL and initialized schema successfully.');
         return true;
       } finally {
         client.release();
       }
     } catch (err: any) {
-      console.error('[DatabaseService] ⚠️ Supabase initialization warning:', err.message);
+      console.error('[DatabaseService] Supabase initialization warning:', err.message);
       return false;
     }
   }

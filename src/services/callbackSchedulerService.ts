@@ -126,7 +126,7 @@ export class CallbackSchedulerService {
       });
     }
 
-    console.log(`[CallbackSchedulerService] ✅ Callback booked successfully for ${phoneNumber} at ${resolution.isoDateTime}`);
+    console.log(`[CallbackSchedulerService] Callback booked successfully for ${phoneNumber} at ${resolution.isoDateTime}`);
 
     return {
       detected: true,

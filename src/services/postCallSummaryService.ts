@@ -67,7 +67,7 @@ export class PostCallSummaryService {
       : `• *General Discussion:* Custom e-commerce website development exploration for ${phoneNumber}`;
 
     // 4. Construct human-framed full message
-    let message = `*ElevateBox — Thank You for Connecting!* 🚀\n\n`;
+    let message = `*ElevateBox - Thank You for Connecting!*\n\n`;
     message += `Namaste! It was a pleasure speaking with you regarding your e-commerce website development.\n\n`;
     message += `*Here is a quick summary of what we discussed:*\n`;
     message += `${summaryParagraph}\n\n`;
@@ -78,9 +78,8 @@ export class PostCallSummaryService {
 
     message += `Our engineering team has received your project details and is preparing the optimal architecture and timeline.\n\n`;
     message += `----------------------------------------\n`;
-    message += `📱 *Direct Developer Contact:* ${developerPhone}\n`;
-    message += `📄 *Developer Resume & Credentials:* ${resumeUrl}\n`;
-    message += `🏗️ *System Architecture & Flow:* ${architectureImageUrl}\n`;
+    message += `*Direct Developer Contact:* ${developerPhone}\n`;
+    message += `*Developer Portfolio and Projects:* ${resumeUrl}\n`;
     message += `----------------------------------------\n\n`;
     message += `Feel free to reply directly to this message if you have any questions. Looking forward to building your store!`;
 

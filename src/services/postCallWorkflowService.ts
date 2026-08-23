@@ -71,7 +71,7 @@ export class PostCallWorkflowService {
           content: `Post-call WhatsApp follow-up sent to ${callState.phoneNumber} (Resume, Architecture Image & Contact: ${formatted.developerPhoneNumber})`,
         });
 
-        console.log(`[PostCallWorkflow] ✅ Post-call follow-up delivered successfully (ID: ${result.messageId})`);
+        console.log(`[PostCallWorkflow] Post-call follow-up delivered successfully (ID: ${result.messageId})`);
         return { success: true, messageId: result.messageId };
       } else {
         callState.providerErrors.push({

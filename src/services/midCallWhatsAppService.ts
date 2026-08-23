@@ -73,7 +73,7 @@ export class MidCallWhatsAppService {
           content: `Mid-call WhatsApp sent to ${callState.phoneNumber} (Evidence: ${triggerEvidence})`,
         });
 
-        console.log(`[MidCallWhatsAppService] ✅ Mid-call WhatsApp delivered successfully (ID: ${result.messageId})`);
+        console.log(`[MidCallWhatsAppService] Mid-call WhatsApp delivered successfully (ID: ${result.messageId})`);
         return true;
       } else {
         callState.midCallWhatsApp.status = 'failed';
@@ -82,7 +82,7 @@ export class MidCallWhatsAppService {
           error: result.error || 'Failed to send mid-call WhatsApp',
           timestamp: new Date().toISOString(),
         });
-        console.warn(`[MidCallWhatsAppService] ⚠️ WhatsApp dispatch returned failure:`, result.error);
+        console.warn(`[MidCallWhatsAppService] WhatsApp dispatch returned failure:`, result.error);
         return false;
       }
     } catch (err: any) {
@@ -92,7 +92,7 @@ export class MidCallWhatsAppService {
         error: err.message,
         timestamp: new Date().toISOString(),
       });
-      console.error(`[MidCallWhatsAppService] ❌ Dispatch exception:`, err.message);
+      console.error(`[MidCallWhatsAppService] Dispatch exception:`, err.message);
       return false;
     }
   }

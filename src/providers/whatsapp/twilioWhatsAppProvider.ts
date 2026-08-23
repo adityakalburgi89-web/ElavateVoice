@@ -26,13 +26,13 @@ export class TwilioWhatsAppProvider implements IWhatsAppProvider {
     const portfolioUrl = env.PORTFOLIO_URL || 'https://portfolio-aditya-nine-9.vercel.app/';
 
     const messageText =
-      `*ElevateBox E-Commerce Development* 🚀\n\n` +
+      `*ElevateBox E-Commerce Development*\n\n` +
       `Namaste! We're glad to connect on the call right now.\n` +
       `We've noted your requirements for *${businessName}*${features}.\n\n` +
       `Explore our past work and live client stores here:\n` +
-      `🔗 ${portfolioUrl}\n\n` +
+      `${portfolioUrl}\n\n` +
       `Our technical team is reviewing your project requirements right now to provide the fastest launch plan.\n` +
-      `Let's continue on the phone! 🚀`;
+      `Let's continue on the phone!`;
 
     return this.sendMessage(recipientPhoneNumber, messageText);
   }
@@ -45,12 +45,12 @@ export class TwilioWhatsAppProvider implements IWhatsAppProvider {
     const portfolioUrl = resumeUrl || env.PORTFOLIO_URL || 'https://portfolio-aditya-nine-9.vercel.app/';
 
     let messageText =
-      `*ElevateBox — Call Summary & Next Steps* 🚀\n\n` +
+      `*ElevateBox - Call Summary and Next Steps*\n\n` +
       `Thank you for speaking with us today.\n\n` +
       `*Summary of Discussion:*\n${conversationSummary}\n\n` +
       `----------------------------------------\n` +
-      `📱 *Direct Developer Contact:* ${developerPhoneNumber}\n` +
-      `🌐 *Developer Portfolio & Projects:* ${portfolioUrl}\n` +
+      `*Direct Developer Contact:* ${developerPhoneNumber}\n` +
+      `*Developer Portfolio and Projects:* ${portfolioUrl}\n` +
       `----------------------------------------\n\n` +
       `Our team will follow up shortly to help bring your online store to life!`;
 
@@ -102,7 +102,7 @@ export class TwilioWhatsAppProvider implements IWhatsAppProvider {
         };
       }
 
-      console.log(`[TwilioWhatsAppProvider] ✅ WhatsApp dispatched successfully! Message SID: ${resData.sid}`);
+      console.log(`[TwilioWhatsAppProvider] WhatsApp dispatched successfully. Message SID: ${resData.sid}`);
       return {
         success: true,
         messageId: resData.sid,

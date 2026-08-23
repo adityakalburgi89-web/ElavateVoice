@@ -34,9 +34,9 @@ export class MetaWhatsAppProvider implements IWhatsAppProvider {
       `Namaste! We're glad to connect on the call right now.\n` +
       `We've noted your requirements for *${business}* ${features}.\n\n` +
       `Explore our past work and live client stores here:\n` +
-      `🔗 ${portfolioUrl}\n\n` +
+      `${portfolioUrl}\n\n` +
       `Our technical team is reviewing your project requirements right now to provide the fastest launch plan.\n` +
-      `Let's continue on the phone! 🚀`;
+      `Let's continue on the phone!`;
 
     const isDummyOrMissing =
       !this.phoneNumberId ||
@@ -68,15 +68,15 @@ export class MetaWhatsAppProvider implements IWhatsAppProvider {
     const portfolioUrl = resumeUrl || env.PORTFOLIO_URL || 'https://portfolio-aditya-nine-9.vercel.app/';
 
     let messageText = 
-      `*ElevateBox — Call Summary & Next Steps* 🚀\n\n` +
+      `*ElevateBox - Call Summary and Next Steps*\n\n` +
       `Thank you for speaking with us today.\n\n` +
       `*Summary of Discussion:*\n${conversationSummary}\n\n` +
       `----------------------------------------\n` +
-      `📱 *Direct Developer Contact:* ${developerPhoneNumber}\n` +
-      `🌐 *Developer Portfolio & Projects:* ${portfolioUrl}\n`;
+      `*Direct Developer Contact:* ${developerPhoneNumber}\n` +
+      `*Developer Portfolio and Projects:* ${portfolioUrl}\n`;
 
     if (architectureImageUrl && architectureImageUrl !== portfolioUrl) {
-      messageText += `🏗️ *System Architecture:* ${architectureImageUrl}\n`;
+      messageText += `*System Architecture:* ${architectureImageUrl}\n`;
     }
     
     messageText += `----------------------------------------\n\n` +
