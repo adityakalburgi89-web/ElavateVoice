@@ -7,9 +7,41 @@ export type CallStatus =
   | 'busy'
   | 'no-answer';
 
+import { z } from 'zod';
+
 export type Language = 'en' | 'hi' | 'te' | 'mixed';
 
 export type LeadClassification = 'HOT' | 'WARM' | 'COLD' | 'UNCLASSIFIED';
+
+export const leadDetailsSchema = z.object({
+  businessOrProducts: z.string().nullable().optional(),
+  productCount: z.number().nullable().optional(),
+  budget: z.string().nullable().optional(),
+  timeline: z.string().nullable().optional(),
+  requiredFeatures: z.array(z.string()).optional().default([]),
+  objections: z.array(z.string()).optional().default([]),
+  decisionMaker: z.string().nullable().optional(),
+  relevantNotes: z.string().nullable().optional(),
+});
+
+export const qualificationDecisionSchema = z.object({
+  classification: z.enum(['HOT', 'WARM', 'COLD', 'UNCLASSIFIED']),
+  confidence: z.number().min(0).max(1),
+  intentScore: z.number().min(0).max(100),
+  reasons: z.array(z.string()).optional().default([]),
+  buyingSignals: z.array(z.string()).optional().default([]),
+  barriers: z.array(z.string()).optional().default([]),
+  recommendedAction: z.enum([
+    'send_mid_call_whatsapp',
+    'schedule_callback',
+    'continue_conversation',
+    'graceful_exit',
+  ]),
+});
+
+export type QualificationDecision = z.infer<typeof qualificationDecisionSchema>;
+
+export type ExtractedLeadDetails = z.infer<typeof leadDetailsSchema>;
 
 export interface LeadDetails {
   businessOrProducts: string | null;
@@ -19,6 +51,7 @@ export interface LeadDetails {
   requiredFeatures: string[];
   objections: string[];
   decisionMaker: string | null;
+  relevantNotes?: string | null;
 }
 
 export interface MidCallWhatsAppState {
@@ -32,6 +65,7 @@ export interface CallbackState {
   requested: boolean;
   originalPhrase: string | null;
   resolvedDateTime: string | null;
+  timezone?: string | null;
   booked: boolean;
   calendarEventId: string | null;
 }
@@ -41,6 +75,8 @@ export interface PostCallWhatsAppState {
   resumeSent: boolean;
   architectureImageSent: boolean;
   timestamp: string | null;
+  messageId?: string | null;
+  followUpText?: string | null;
 }
 
 export interface ProviderErrorLog {
@@ -72,6 +108,9 @@ export interface CallState {
   callback: CallbackState;
   postCallWhatsApp: PostCallWhatsAppState;
   providerErrors: ProviderErrorLog[];
+  isSpeaking: boolean;
+  currentPlaybackId: string | null;
+  interruptedTurns: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -87,4 +126,11 @@ export interface LLMTurnOutput {
   sendMidCallWhatsApp: boolean;
   scheduleCallback: boolean;
   callbackPhrase: string | null;
+}
+
+export interface TurnLatencyMetrics {
+  sttMs: number;
+  llmMs: number;
+  ttsMs: number;
+  totalMs: number;
 }
