@@ -30,13 +30,17 @@ export class SarvamSTTProvider implements ISTTProvider {
         formData.append('language_code', languageHint);
       }
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
       const response = await fetch(this.apiEndpoint, {
         method: 'POST',
         headers: {
           'api-subscription-key': this.apiKey,
         },
         body: formData,
-      });
+        signal: controller.signal,
+      }).finally(() => clearTimeout(timeoutId));
 
       if (!response.ok) {
         const errText = await response.text();
