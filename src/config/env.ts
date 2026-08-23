@@ -25,7 +25,10 @@ const envSchema = z.object({
   GEMINI_API_KEY: z.string().optional().default(''),
   GROQ_API_KEY: z.string().optional().default(''),
 
-  WHATSAPP_PROVIDER: z.string().optional().default('twilio'),
+  WHATSAPP_PROVIDER: z.string().optional().default('ultramsg'),
+  ULTRAMSG_INSTANCE_ID: z.string().optional().default('instance189337'),
+  ULTRAMSG_TOKEN: z.string().optional().default('sd62425yieoj0nch'),
+
   TWILIO_ACCOUNT_SID: z.string().optional().default(''),
   TWILIO_AUTH_TOKEN: z.string().optional().default(''),
   TWILIO_WHATSAPP_FROM: z.string().optional().default('+17372212163'),

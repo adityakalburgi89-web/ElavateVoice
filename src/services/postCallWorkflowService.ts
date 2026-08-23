@@ -2,7 +2,9 @@ import { callStateStore } from './callStateStore.js';
 import { postCallSummaryService } from './postCallSummaryService.js';
 import { metaWhatsAppProvider } from '../providers/whatsapp/metaWhatsAppProvider.js';
 import { twilioWhatsAppProvider } from '../providers/whatsapp/twilioWhatsAppProvider.js';
+import { ultraMsgWhatsAppProvider } from '../providers/whatsapp/ultraMsgWhatsAppProvider.js';
 import { env } from '../config/env.js';
+import { IWhatsAppProvider } from '../interfaces/whatsapp.js';
 
 export interface PostCallWorkflowResult {
   success: boolean;
@@ -39,7 +41,12 @@ export class PostCallWorkflowService {
 
     // 3. Dispatch via WhatsApp Provider
     try {
-      const provider = env.WHATSAPP_PROVIDER === 'twilio' ? twilioWhatsAppProvider : metaWhatsAppProvider;
+      let provider: IWhatsAppProvider = metaWhatsAppProvider;
+      if (env.WHATSAPP_PROVIDER === 'ultramsg') {
+        provider = ultraMsgWhatsAppProvider;
+      } else if (env.WHATSAPP_PROVIDER === 'twilio') {
+        provider = twilioWhatsAppProvider;
+      }
       const result = await provider.sendPostCallFollowUp({
         recipientPhoneNumber: callState.phoneNumber,
         conversationSummary: formatted.summaryParagraph,
