@@ -26,6 +26,9 @@ export class SarvamTTSProvider implements ITTSProvider {
     else if (language.startsWith('te')) langCode = 'te-IN';
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
       const response = await fetch(this.apiEndpoint, {
         method: 'POST',
         headers: {
@@ -38,7 +41,8 @@ export class SarvamTTSProvider implements ITTSProvider {
           speaker: 'anushka',
           model: 'bulbul:v2',
         }),
-      });
+        signal: controller.signal,
+      }).finally(() => clearTimeout(timeoutId));
 
       if (!response.ok) {
         const errText = await response.text();
