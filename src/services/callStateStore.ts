@@ -238,7 +238,7 @@ export class CallStateStore {
     this.processedWebhookEvents.add(eventId);
   }
 
-  private asyncPersist(state: CallState): Promise<void> {
+  private asyncPersist(state: CallState): void {
     setImmediate(async () => {
       try {
         await databaseService.persistCallState(state);

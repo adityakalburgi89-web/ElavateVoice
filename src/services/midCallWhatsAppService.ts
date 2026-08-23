@@ -1,6 +1,8 @@
 import { callStateStore } from './callStateStore.js';
 import { actionGuardrails } from './actionGuardrails.js';
 import { metaWhatsAppProvider } from '../providers/whatsapp/metaWhatsAppProvider.js';
+import { twilioWhatsAppProvider } from '../providers/whatsapp/twilioWhatsAppProvider.js';
+import { env } from '../config/env.js';
 import { QualificationDecision } from '../types/callState.js';
 
 export class MidCallWhatsAppService {
@@ -42,7 +44,8 @@ export class MidCallWhatsAppService {
 
     try {
       console.log(`[MidCallWhatsAppService] Dispatching mid-call WhatsApp to ${callState.phoneNumber}...`);
-      const result = await metaWhatsAppProvider.sendMidCallMessage({
+      const provider = env.WHATSAPP_PROVIDER === 'twilio' ? twilioWhatsAppProvider : metaWhatsAppProvider;
+      const result = await provider.sendMidCallMessage({
         recipientPhoneNumber: callState.phoneNumber,
         leadDetails: callState.leadDetails,
       });

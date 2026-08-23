@@ -1,6 +1,8 @@
 import { callStateStore } from './callStateStore.js';
 import { postCallSummaryService } from './postCallSummaryService.js';
 import { metaWhatsAppProvider } from '../providers/whatsapp/metaWhatsAppProvider.js';
+import { twilioWhatsAppProvider } from '../providers/whatsapp/twilioWhatsAppProvider.js';
+import { env } from '../config/env.js';
 
 export interface PostCallWorkflowResult {
   success: boolean;
@@ -37,7 +39,8 @@ export class PostCallWorkflowService {
 
     // 3. Dispatch via WhatsApp Provider
     try {
-      const result = await metaWhatsAppProvider.sendPostCallFollowUp({
+      const provider = env.WHATSAPP_PROVIDER === 'twilio' ? twilioWhatsAppProvider : metaWhatsAppProvider;
+      const result = await provider.sendPostCallFollowUp({
         recipientPhoneNumber: callState.phoneNumber,
         conversationSummary: formatted.summaryParagraph,
         developerPhoneNumber: formatted.developerPhoneNumber,

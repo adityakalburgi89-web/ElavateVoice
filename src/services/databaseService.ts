@@ -117,16 +117,17 @@ export class DatabaseService {
           updated_at = NOW();
       `;
 
+      const q = (callState as any).qualification;
       const values = [
         callState.callId,
         callState.phoneNumber,
         callState.callStatus,
         callState.detectedLanguage || 'en',
-        callState.qualification?.classification || callState.classification || 'UNCLASSIFIED',
-        callState.qualification?.confidence ?? callState.intentConfidence ?? 0,
-        callState.qualification?.intentScore ?? callState.intentScore ?? null,
+        q?.classification || callState.classification || 'UNCLASSIFIED',
+        q?.confidence ?? callState.intentConfidence ?? 0,
+        q?.intentScore ?? callState.intentScore ?? null,
         JSON.stringify(callState.leadDetails || {}),
-        JSON.stringify(callState.qualification || {}),
+        JSON.stringify(q || {}),
         JSON.stringify(callState.midCallWhatsApp || {}),
         JSON.stringify(callState.postCallWhatsApp || {}),
         JSON.stringify(callState.callback || {}),

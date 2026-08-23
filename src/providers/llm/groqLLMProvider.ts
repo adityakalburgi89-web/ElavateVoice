@@ -1,5 +1,5 @@
-import { ILLMProvider, LLMTurnOutput } from '../../interfaces/llm.js';
-import { CallState, ExtractedLeadDetails, leadDetailsSchema } from '../../types/callState.js';
+import { ILLMProvider } from '../../interfaces/llm.js';
+import { CallState, LLMTurnOutput, ExtractedLeadDetails, leadDetailsSchema } from '../../types/callState.js';
 import { env } from '../../config/env.js';
 
 export class GroqLLMProvider implements ILLMProvider {
@@ -104,6 +104,10 @@ Respond strictly in JSON:
         callbackPhrase: null,
       };
     }
+  }
+
+  async generatePostCallSummary(callState: CallState): Promise<string> {
+    return `Customer interested in e-commerce website development for ${callState.leadDetails.businessOrProducts || 'their store'}.`;
   }
 
   async extractStructuredLeadDetails(callState: CallState, latestUserSpeech: string): Promise<ExtractedLeadDetails> {
