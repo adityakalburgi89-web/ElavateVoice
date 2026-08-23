@@ -35,6 +35,10 @@ const envSchema = z.object({
 
   SUPABASE_URL: z.string().optional().default(''),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional().default(''),
+  DATABASE_URL: z.string().optional().default(''),
+
+  RESUME_URL: z.string().optional().default('https://elevatebox.io/assets/aditya_kalburgi_resume.pdf'),
+  ARCHITECTURE_IMAGE_URL: z.string().optional().default('https://elevatebox.io/assets/elevate_voice_architecture.png'),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
