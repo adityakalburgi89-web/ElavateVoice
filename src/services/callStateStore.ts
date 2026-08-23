@@ -1,4 +1,5 @@
 import { CallState, CallStatus, LeadDetails, TranscriptItem } from '../types/callState.js';
+import { databaseService } from './databaseService.js';
 
 export class CallStateStore {
   private static instance: CallStateStore;
@@ -26,6 +27,7 @@ export class CallStateStore {
       requiredFeatures: [],
       objections: [],
       decisionMaker: null,
+      relevantNotes: null,
     };
 
     const newState: CallState = {
@@ -60,11 +62,15 @@ export class CallStateStore {
         timestamp: null,
       },
       providerErrors: [],
+      isSpeaking: false,
+      currentPlaybackId: null,
+      interruptedTurns: 0,
       createdAt: now,
       updatedAt: now,
     };
 
     this.calls.set(callId, newState);
+    this.asyncPersist(newState);
     return newState;
   }
 
@@ -90,6 +96,7 @@ export class CallStateStore {
       timestamp: call.updatedAt,
     });
 
+    this.asyncPersist(call);
     return call;
   }
 
@@ -104,6 +111,122 @@ export class CallStateStore {
 
     call.transcript.push(fullItem);
     call.updatedAt = fullItem.timestamp;
+    this.asyncPersist(call);
+    return call;
+  }
+
+  private processedUtterances: Set<string> = new Set();
+
+  public isUtteranceProcessed(utterance: string): boolean {
+    const key = utterance.trim().toLowerCase();
+    return !key || this.processedUtterances.has(key);
+  }
+
+  public markUtteranceProcessed(utterance: string): void {
+    const key = utterance.trim().toLowerCase();
+    if (key) this.processedUtterances.add(key);
+  }
+
+  public setSpeaking(callId: string, isSpeaking: boolean, playbackId?: string | null): CallState | null {
+    const call = this.calls.get(callId);
+    if (!call) return null;
+    call.isSpeaking = isSpeaking;
+    if (playbackId !== undefined) {
+      call.currentPlaybackId = playbackId;
+    }
+    call.updatedAt = new Date().toISOString();
+    return call;
+  }
+
+  public interruptCall(callId: string): { interrupted: boolean; callState: CallState | null } {
+    const call = this.calls.get(callId);
+    if (!call) return { interrupted: false, callState: null };
+
+    const wasSpeaking = call.isSpeaking;
+    call.isSpeaking = false;
+    call.currentPlaybackId = null;
+    call.interruptedTurns += 1;
+    call.updatedAt = new Date().toISOString();
+
+    call.transcript.push({
+      role: 'system',
+      content: 'Caller interrupted AI speech (barge-in event)',
+      timestamp: call.updatedAt,
+    });
+
+    return { interrupted: wasSpeaking, callState: call };
+  }
+
+  public setDetectedLanguage(callId: string, language: any): CallState | null {
+    const call = this.calls.get(callId);
+    if (!call) return null;
+    call.detectedLanguage = language;
+    call.updatedAt = new Date().toISOString();
+    return call;
+  }
+
+  public updateLeadDetails(callId: string, updates: Partial<LeadDetails>): CallState | null {
+    const call = this.calls.get(callId);
+    if (!call) return null;
+
+    call.leadDetails = {
+      businessOrProducts: updates.businessOrProducts !== undefined && updates.businessOrProducts !== null
+        ? updates.businessOrProducts
+        : call.leadDetails.businessOrProducts,
+      productCount: updates.productCount !== undefined && updates.productCount !== null
+        ? updates.productCount
+        : call.leadDetails.productCount,
+      budget: updates.budget !== undefined && updates.budget !== null
+        ? updates.budget
+        : call.leadDetails.budget,
+      timeline: updates.timeline !== undefined && updates.timeline !== null
+        ? updates.timeline
+        : call.leadDetails.timeline,
+      requiredFeatures: Array.from(
+        new Set([...call.leadDetails.requiredFeatures, ...(updates.requiredFeatures || [])])
+      ),
+      objections: Array.from(
+        new Set([...call.leadDetails.objections, ...(updates.objections || [])])
+      ),
+      decisionMaker: updates.decisionMaker !== undefined && updates.decisionMaker !== null
+        ? updates.decisionMaker
+        : call.leadDetails.decisionMaker,
+      relevantNotes: updates.relevantNotes !== undefined && updates.relevantNotes !== null
+        ? updates.relevantNotes
+        : call.leadDetails.relevantNotes || null,
+    };
+    call.updatedAt = new Date().toISOString();
+    this.asyncPersist(call);
+    return call;
+  }
+
+  public updateQualification(
+    callId: string,
+    decision: {
+      classification: any;
+      confidence: number;
+      intentScore: number;
+      buyingSignals?: string[];
+      reasons?: string[];
+      barriers?: string[];
+    }
+  ): CallState | null {
+    const call = this.calls.get(callId);
+    if (!call) return null;
+
+    call.classification = decision.classification;
+    call.intentConfidence = decision.confidence;
+    call.intentScore = decision.intentScore;
+    if (decision.buyingSignals && decision.buyingSignals.length > 0) {
+      call.buyingSignals = Array.from(new Set([...call.buyingSignals, ...decision.buyingSignals]));
+    }
+    if (decision.barriers && decision.barriers.length > 0) {
+      call.leadDetails.objections = Array.from(
+        new Set([...call.leadDetails.objections, ...decision.barriers])
+      );
+    }
+    call.updatedAt = new Date().toISOString();
+    this.asyncPersist(call);
     return call;
   }
 
@@ -113,6 +236,16 @@ export class CallStateStore {
 
   public markWebhookProcessed(eventId: string): void {
     this.processedWebhookEvents.add(eventId);
+  }
+
+  private asyncPersist(state: CallState): Promise<void> {
+    setImmediate(async () => {
+      try {
+        await databaseService.persistCallState(state);
+      } catch (err: any) {
+        // Silently log; database errors never kill the call
+      }
+    });
   }
 }
 
