@@ -79,7 +79,8 @@ export class PostCallSummaryService {
     message += `Our engineering team has received your project details and is preparing the optimal architecture and timeline.\n\n`;
     message += `----------------------------------------\n`;
     message += `*Direct Developer Contact:* ${developerPhone}\n`;
-    message += `*Developer Portfolio and Projects:* ${resumeUrl}\n`;
+    message += `*Developer Resume & Portfolio:* ${resumeUrl}\n`;
+    message += `*System Architecture & Design:* ${architectureImageUrl}\n`;
     message += `----------------------------------------\n\n`;
     message += `Feel free to reply directly to this message if you have any questions. Looking forward to building your store!`;
 

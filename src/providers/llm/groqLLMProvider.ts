@@ -5,7 +5,7 @@ import { env } from '../../config/env.js';
 export class GroqLLMProvider implements ILLMProvider {
   public providerName = 'groq';
   private apiKey: string;
-  private model: string = 'llama-3.3-70b-versatile';
+  private model: string = 'openai/gpt-oss-120b';
 
   constructor() {
     this.apiKey = env.GROQ_API_KEY || '';
